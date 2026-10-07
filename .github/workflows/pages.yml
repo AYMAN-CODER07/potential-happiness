@@ -1,0 +1,61 @@
+name: Deploy CodeHub to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Build static site
+        env:
+          SUPABASE_URL: ${{ vars.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ vars.SUPABASE_ANON_KEY }}
+        run: |
+          test -n "$SUPABASE_URL" || { echo "Missing repository variable SUPABASE_URL"; exit 1; }
+          test -n "$SUPABASE_ANON_KEY" || { echo "Missing repository variable SUPABASE_ANON_KEY"; exit 1; }
+          mkdir _site
+          cp index.html app.js style.css _site/
+          node <<'NODE'
+          const fs = require('node:fs');
+          const url = JSON.stringify(process.env.SUPABASE_URL);
+          const key = JSON.stringify(process.env.SUPABASE_ANON_KEY);
+          const config = [
+            'window.CODEHUB_SUPABASE_URL = ' + url + ';',
+            'window.CODEHUB_SUPABASE_ANON_KEY = ' + key + ';'
+          ].join(String.fromCharCode(10)) + String.fromCharCode(10);
+          fs.writeFileSync('_site/supabase-config.js', config);
+          NODE
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

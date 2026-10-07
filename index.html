@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script>
+        if (location.port === "5500") {
+            location.replace("http://127.0.0.1:3000/");
+        }
+    </script>
+
+    <title>CodeHub - Learn, Practice & Compile</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <main class="entry-screen" id="entryScreen" role="dialog" aria-modal="true" aria-labelledby="entryTitle">
+        <div class="entry-brandbar">
+            <a class="entry-logo" href="#" aria-label="CodeHub home"><span>&lt;/&gt;</span> CodeHub</a>
+            <span class="entry-kicker">A place to build your next idea</span>
+        </div>
+
+        <div class="entry-layout">
+            <section class="entry-intro" aria-labelledby="entryTitle">
+                <p class="entry-overline">LEARN BY MAKING</p>
+                <h1 id="entryTitle">Welcome to<br><em>CodeHub.</em></h1>
+                <p class="entry-description">A calmer place to learn programming, experiment with code, and see your ideas come to life.</p>
+
+                <div class="entry-code" aria-label="CodeHub code example">
+                    <div class="entry-code-top"><span></span><span></span><span></span><small>hello-world.js</small></div>
+                    <pre><span class="code-purple">const</span> idea = <span class="code-green">"something great"</span>;
+
+<span class="code-blue">console</span>.log(<span class="code-green">"Hello, world!"</span>);</pre>
+                    <div class="entry-code-foot"><span class="entry-status-dot"></span> Ready when you are</div>
+                </div>
+
+                <div class="entry-languages" aria-label="Available languages">
+                    <span>HTML</span><span>CSS</span><span>JavaScript</span><span>Python</span><span>C</span><span>C++</span><span>Java</span>
+                </div>
+            </section>
+
+            <section class="entry-access" aria-label="Choose how to continue">
+                <div class="entry-choice" id="entryChoice">
+                    <p class="entry-overline">GET STARTED</p>
+                    <h2>Your workspace<br>is waiting.</h2>
+                    <p class="entry-access-copy">Sign in to your account, create one, or jump straight into the editor.</p>
+                    <button class="entry-primary" type="button" data-auth-mode="login">Log in <span aria-hidden="true">&rarr;</span></button>
+                    <button class="entry-secondary" type="button" data-auth-mode="signup">Create an account</button>
+                    <div class="entry-divider"><span>OR</span></div>
+                    <button class="entry-guest" type="button" id="continueGuest">Continue as guest <span aria-hidden="true">&rarr;</span></button>
+                    <p class="entry-footnote">No account needed to start coding.</p>
+                </div>
+
+                <div class="entry-auth hidden" id="entryAuth" aria-live="polite">
+                    <button class="entry-back" type="button" id="authBack">&larr; Back</button>
+                    <p class="entry-overline" id="authOverline">WELCOME BACK</p>
+                    <h2 id="authTitle">Log in</h2>
+                    <p class="entry-access-copy" id="authDescription">Pick up where you left off.</p>
+                    <form id="authForm">
+                        <label id="nameField" class="hidden">Name<input id="accountName" name="name" autocomplete="name" placeholder="Your name"></label>
+                        <label>Email address<input name="email" type="email" autocomplete="email" placeholder="you@example.com" required></label>
+                        <label>Password<input name="password" type="password" autocomplete="current-password" placeholder="At least 8 characters" minlength="8" required></label>
+                        <button class="entry-primary" type="submit" id="authSubmit">Log in <span aria-hidden="true">&rarr;</span></button>
+                    </form>
+                    <p class="auth-notice" id="authNotice">Passwords are securely handled by CodeHub’s account service and never stored in plain text.</p>
+                    <button class="entry-guest entry-guest-small" type="button" id="continueGuestFromAuth">Continue as guest</button>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <div class="app-shell" id="appShell" inert>
+
+    <!-- Navigation Bar -->
+    <header class="navbar">
+
+        <div class="logo">
+            <span>Code</span>Hub
+        </div>
+
+        <nav>
+            <a href="#learning" data-practice="tutorials">Tutorials</a>
+            <a href="#learning" data-practice="examples">Examples</a>
+            <a href="#learning" data-practice="exercises">Exercises</a>
+            <a href="#compiler">Compiler</a>
+        </nav>
+
+        <button class="login-btn" id="openLogin">Login</button>
+
+    </header>
+
+
+    <!-- Main Layout -->
+    <div class="layout">
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+
+            <h3>Learn</h3>
+
+            <a href="#learning" data-language="html">HTML</a>
+            <a href="#learning" data-language="css">CSS</a>
+            <a href="#learning" data-language="javascript">JavaScript</a>
+            <a href="#learning" data-language="python">Python</a>
+            <a href="#learning" data-language="c">C</a>
+            <a href="#learning" data-language="cpp">C++</a>
+            <a href="#learning" data-language="java">Java</a>
+
+            <h3>Practice</h3>
+
+            <a href="#learning" data-practice="examples">Examples</a>
+            <a href="#learning" data-practice="exercises">Exercises</a>
+            <a href="#learning" data-practice="challenges">Challenges</a>
+
+        </aside>
+
+
+        <!-- Main Content -->
+        <main class="content">
+
+            <section class="learning-panel" id="learning" aria-live="polite"></section>
+
+            <section class="welcome">
+
+                <h1>Learn. Code. Create.</h1>
+
+                <p>
+                    Learn programming, practice your skills,
+                    and run your code online with CodeHub.
+                </p>
+
+            </section>
+
+
+            <!-- Compiler -->
+            <section class="compiler" id="compiler">
+
+                <div class="compiler-header">
+
+                    <div>
+                        <h2>Online Compiler</h2>
+                        <p>Web previews run here. Python, C, C++, and Java run on Wandbox.</p>
+                    </div>
+
+                    <label class="language-picker" for="languageSelect">Language
+                    <select id="languageSelect">
+                        <option value="html">HTML</option>
+                        <option value="css">CSS</option>
+                        <option value="javascript">JavaScript</option>
+                        <option value="python">Python</option>
+                        <option value="c">C</option>
+                        <option value="cpp">C++</option>
+                        <option value="java">Java</option>
+                    </select>
+                    </label>
+
+                </div>
+
+<div class="code-workspace">
+
+    <div class="file-panel">
+
+        <div class="file-panel-header">
+            <span>📁 Files</span>
+            <button id="newFileButton">+</button>
+        </div>
+
+       <div id="fileList">
+
+                    <div class="file-row active">
+        <button class="file-item" data-file="index.html">
+            📄 index.html
+        </button>
+    </div>
+
+    <div class="file-row">
+        <button class="file-item" data-file="style.css">
+            🎨 style.css
+        </button>
+        <button class="delete-file" data-file="style.css">×</button>
+    </div>
+
+    <div class="file-row">
+        <button class="file-item" data-file="script.js">
+            ⚡ script.js
+        </button>
+        <button class="delete-file" data-file="script.js">×</button>
+    </div>
+
+</div>
+    </div>
+
+    <div id="editor"></div>
+
+</div>
+
+
+                <div class="stdin-panel" id="stdinPanel" hidden>
+                    <label id="programInputLabel" for="programInput">Program input (stdin)</label>
+                    <textarea id="programInput" rows="3" spellcheck="false" placeholder="Enter the input your program reads."></textarea>
+                    <p id="programInputHint">Input is sent to the program before it runs. Match the format your code expects.</p>
+                </div>
+
+                <div class="run-area">
+
+                    <button id="runButton">
+                        ▶ Run Code
+                    </button>
+
+                </div>
+
+
+                <!-- Output -->
+              <div class="output-container">
+
+    <div class="output-header">
+
+        <div>
+            <h3>Output</h3>
+            <span id="outputStatus" aria-live="polite">Ready</span>
+        </div>
+
+        <div class="output-actions">
+            <button id="clearOutput">Clear</button>
+            <button id="fullscreenOutput">⛶ Fullscreen</button>
+        </div>
+
+    </div>
+
+    <div id="output">
+
+        <div class="output-placeholder">
+            Run your code to see the result here.
+        </div>
+
+    </div>
+
+</div>
+            </section>
+
+        </main>
+
+    </div>
+
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.52.2/min/vs/loader.min.js"></script>
+<script src="app.js"></script>
+
+</body>
+
+</html>

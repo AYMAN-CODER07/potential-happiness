@@ -1,0 +1,2 @@
+window.CODEHUB_SUPABASE_URL = "";
+window.CODEHUB_SUPABASE_ANON_KEY = "";
